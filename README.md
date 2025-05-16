@@ -111,3 +111,27 @@ La arquitectura del proyecto está dividida en las siguientes capas y módulos:
 
 **Persistencia:**
 - Las credenciales y la sesión no persisten más allá del reinicio (a menos que implementes «recordarme», opcional).
+
+### 4.2 Gestión de encuestas
+
+**Crear encuesta (`PollService.create_poll`):**
+- Parámetros: `pregunta: str`, `opciones: List[str]`, `duracion_segundos: int`, `tipo: str` (simple/multiple).
+- Asigna un id secuencial o UUID, `timestamp_inicio = ahora`, `estado = activa`.
+
+**Votar (`PollService.vote`):**
+- Parámetros: `poll_id`, `username`, `opcion` (o lista de opciones si es múltiple).
+- Verifica que la encuesta existe y está activa, y que el usuario no haya votado ya.
+- Registra el voto en `VotoRepository` o directamente en el objeto encuesta.
+- Genera un token NFT asociando `username`, `poll_id`, `opcion`, `timestamp`.
+
+**Cierre automático:**
+- El servicio debe comprobar antes de cada operación (o mediante un mecanismo interno) si alguna encuesta ha superado su `timestamp_inicio + duracion` y, de ser así, invocar `close_poll(poll_id)`.
+- Al cerrar: cambiar `estado = cerrada`, notificar observadores (Observer) y almacenar resultado.
+
+**Cierre manual:**
+- Comando CLI `cerrar_encuesta <poll_id>` permite al streamer cerrar anticipadamente.
+
+**Resultados:**
+- Parciales: método `get_partial_results(poll_id)` retorna conteo y porcentaje por opción.
+- Finales: `get_final_results(poll_id)` hace lo mismo tras cierre.
+- Desempate: si hay empate, invocar `DesempateStrategy.resolve(encuesta)`.
