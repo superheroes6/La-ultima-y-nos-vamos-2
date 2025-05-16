@@ -5,7 +5,8 @@ class ChatbotService:
     Encapsula el pipeline de Hugging Face y lógica de respuesta.
     """
     def __init__(self, poll_service=None):
-        self.chatbot = pipeline("conversational", model="facebook/blenderbot-400M-distill")
+        # Usa solo pipeline, elimina Conversation
+        self.chatbot = pipeline("text-generation", model="gpt2")
         self.poll_service = poll_service
         self.historial = {}  # username -> list of (user_msg, bot_msg)
 
@@ -29,10 +30,9 @@ class ChatbotService:
             else:
                 respuesta = "No hay encuestas activas en este momento."
         else:
-            # Llama al modelo IA
-            from transformers import Conversation
-            conv = Conversation(message)
-            respuesta = self.chatbot(conv).generated_responses[-1]
+            # Usa text-generation en vez de conversational
+            output = self.chatbot(message, max_length=60, num_return_sequences=1)
+            respuesta = output[0]['generated_text']
         # Guardar historial (opcional)
         if username not in self.historial:
             self.historial[username] = []
@@ -40,3 +40,4 @@ class ChatbotService:
         return respuesta
 
     # Métodos principales
+    # ...existing code...
