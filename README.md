@@ -32,3 +32,15 @@ pip install -r requirements.txt
 Plataforma de votaciones interactivas para streamers con encuestas, chatbot IA y tokens NFT simulados.
 
 ---
+
+## Objetivos de aprendizaje
+
+Al completar este proyecto, el estudiante demostrará su capacidad para:
+
+- Diseñar sistemas complejos empleando principios SOLID y patrones de diseño.
+- Integrar tecnologías heterogéneas: CLI, Gradio (UI), Transformers (IA conversacional) y simulación de NFTs.
+- Gestionar persistencia de datos de forma desacoplada, ya sea con archivos JSON o SQLite.
+- Escribir pruebas unitarias con pytest que aseguren la fiabilidad de cada componente.
+- Documentar y estructurar un proyecto de software de tamaño medio de manera profesional.
+
+---
