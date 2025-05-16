@@ -43,6 +43,3 @@ class NFTService:
         token.owner = new_owner
         self.nft_repo.save(token)
         return token
-
-    # Métodos principales
-    # ...existing code...

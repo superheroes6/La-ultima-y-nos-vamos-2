@@ -29,15 +29,54 @@ pip install -r requirements.txt
   python src/app.py --ui
   ```
 
-## Estructura
+## Estructura de proyecto y configuración
 
-- Modelos de dominio: `src/models/`
-- Repositorios: `src/repositories/`
-- Servicios: `src/services/`
-- Patrones: `src/patterns/`
-- Controladores: `src/controllers/`
-- Interfaz Gradio: `src/ui/`
-- Pruebas: `tests/`
+```
+la_ultima_y_nos_vamos/
+├── src/
+│   ├── app.py            # Punto de entrada
+│   ├── config.py         # Carga de parámetros (JSON/YAML)
+│   ├── models/
+│   │   ├── encuesta.py
+│   │   ├── voto.py
+│   │   ├── usuario.py
+│   │   └── token_nft.py
+│   ├── repositories/
+│   │   ├── encuesta_repo.py
+│   │   ├── usuario_repo.py
+│   │   └── nft_repo.py
+│   ├── services/
+│   │   ├── poll_service.py
+│   │   ├── user_service.py
+│   │   ├── nft_service.py
+│   │   └── chatbot_service.py
+│   ├── patterns/
+│   │   ├── observer.py
+│   │   ├── factory.py
+│   │   └── strategy.py
+│   ├── controllers/
+│   │   ├── cli_controller.py
+│   │   └── ui_controller.py
+│   └── ui/
+│       └── gradio_app.py
+├── tests/
+│   ├── test_models.py
+│   ├── test_repositories.py
+│   ├── test_services.py
+│   ├── test_patterns.py
+│   └── test_cli.py
+├── requirements.txt
+└── README.md
+```
+
+### requirements.txt
+
+```
+gradio
+transformers
+pytest
+bcrypt
+```
 
 ## Descripción
 

@@ -8,13 +8,10 @@ class PollService:
     def __init__(self, encuesta_repo, nft_service, observer=None, desempate_strategy=None):
         self.encuesta_repo = encuesta_repo
         self.nft_service = nft_service
-        self.observer = observer  # Observer para notificaciones
+        self.observer = observer
         self.desempate_strategy = desempate_strategy
 
     def _auto_close_polls(self):
-        """
-        Cierra automáticamente encuestas cuyo tiempo expiró.
-        """
         for encuesta in self.encuesta_repo.get_all():
             if encuesta.estado == "activa":
                 fin = encuesta.timestamp_inicio + timedelta(seconds=encuesta.duracion_segundos)
@@ -22,9 +19,6 @@ class PollService:
                     self.close_poll(encuesta.id)
 
     def create_poll(self, pregunta, opciones, duracion_segundos, tipo):
-        """
-        Crea una nueva encuesta.
-        """
         self._auto_close_polls()
         poll_id = str(uuid.uuid4())
         from src.models.encuesta import Encuesta
@@ -39,18 +33,13 @@ class PollService:
         return poll_id
 
     def vote(self, poll_id, username, opcion):
-        """
-        Registra un voto en una encuesta activa y genera un token NFT.
-        """
         self._auto_close_polls()
         encuesta = self.encuesta_repo.get(poll_id)
         if not encuesta or encuesta.estado != "activa":
             raise ValueError("Encuesta no encontrada o no activa.")
-        # Verificar si el usuario ya votó
         if any(v.usuario == username for v in encuesta.votos):
             raise ValueError("El usuario ya ha votado en esta encuesta.")
         from src.models.voto import Voto
-        # Permitir opción múltiple si corresponde
         if encuesta.tipo == "multiple":
             if not isinstance(opcion, list):
                 raise ValueError("Debe proporcionar una lista de opciones.")
@@ -63,9 +52,6 @@ class PollService:
         self.encuesta_repo.save(encuesta)
 
     def close_poll(self, poll_id):
-        """
-        Cierra manual o automáticamente una encuesta.
-        """
         encuesta = self.encuesta_repo.get(poll_id)
         if not encuesta or encuesta.estado != "activa":
             return
@@ -75,9 +61,6 @@ class PollService:
             self.observer.notify("poll_closed", encuesta)
 
     def get_partial_results(self, poll_id):
-        """
-        Devuelve conteo y porcentaje por opción (parciales).
-        """
         self._auto_close_polls()
         encuesta = self.encuesta_repo.get(poll_id)
         if not encuesta:
@@ -94,9 +77,6 @@ class PollService:
         return {"conteo": conteo, "porcentajes": porcentajes}
 
     def get_final_results(self, poll_id):
-        """
-        Devuelve resultados finales tras cierre, aplicando desempate si es necesario.
-        """
         encuesta = self.encuesta_repo.get(poll_id)
         if not encuesta or encuesta.estado != "cerrada":
             return None

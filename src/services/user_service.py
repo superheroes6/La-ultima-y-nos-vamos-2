@@ -10,9 +10,6 @@ class UserService:
         self.sesiones = {}  # username -> session_token
 
     def register(self, username, password):
-        """
-        Solicita username y password, valida unicidad y almacena password_hash.
-        """
         if self.usuario_repo.exists(username):
             raise ValueError("El nombre de usuario ya existe.")
         password_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
@@ -20,9 +17,6 @@ class UserService:
         return True
 
     def login(self, username, password):
-        """
-        Verifica credenciales y retorna un token de sesión (UUID).
-        """
         user = self.usuario_repo.get(username)
         if not user:
             return None
@@ -33,9 +27,6 @@ class UserService:
         return None
 
     def is_logged_in(self, username, token):
-        """
-        Verifica si el usuario está logueado con el token dado.
-        """
         return self.sesiones.get(username) == token
 
     # Métodos principales
