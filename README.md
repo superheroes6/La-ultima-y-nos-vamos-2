@@ -1,5 +1,17 @@
 # La última y nos vamos 2
 
+## Introducción y contexto
+
+En el entorno actual del entretenimiento digital, el streaming ha evolucionado más allá de la simple difusión de partidas de videojuegos o eventos en vivo: los creadores de contenido buscan constantemente nuevas formas de involucrar a su audiencia, ofrecer experiencias interactivas y premiar la fidelidad de sus seguidores. Al mismo tiempo, avances en inteligencia artificial conversacional y la emergente cultura de tokens no fungibles (NFTs) abren la puerta a construir plataformas que combinen votaciones en tiempo real, chatbots capaces de conversar de manera natural y economía digital simulada mediante coleccionables.
+
+Con este escenario como telón de fondo, se plantea el desarrollo de una aplicación de votaciones interactivas para streamers —tanto mediante línea de comandos (CLI) para la administración del canal como con una interfaz web ligera (usando Gradio) para la audiencia— que incorpore tres módulos principales:
+
+- **Sistema de encuestas en vivo:** crea, administra y cierra encuestas con tiempo limitado, permitiendo a los espectadores votar en tiempo real.
+- **Chatbot IA:** integra un modelo preentrenado de Hugging Face Transformers para responder preguntas de los espectadores sobre las encuestas, el stream y cualquier tema relevante.
+- **Tokens NFT simulados:** cada voto emitido genera un “token coleccionable” único, que los usuarios podrán ver en una galería y transferir entre sí.
+
+El objetivo de este ejercicio es que el alumno ponga en práctica conceptos avanzados de Programación Orientada a Objetos (POO), patrones de diseño (Observer, Factory, Strategy, etc.), arquitectura modular y buenas prácticas de ingeniería de software (persistencia desacoplada, pruebas unitarias, documentación), al tiempo que construye una plataforma atractiva y moderna.
+
 ## Instalación
 
 ```bash
@@ -83,3 +95,19 @@ La arquitectura del proyecto está dividida en las siguientes capas y módulos:
 - Arranca la interactividad: por defecto lanza la CLI; si se ejecuta con `--ui`, inicia el servidor Gradio en paralelo.
 
 ---
+
+## Requisitos funcionales detallados
+
+### 4.1 Registro y autenticación de usuarios
+
+**Registro (`UserService.register`):**
+- Solicita username y password.
+- Valida que el nombre no exista (único).
+- Almacena el password_hash (usando `hashlib.pbkdf2_hmac` o `bcrypt`).
+
+**Login (`UserService.login`):**
+- Verifica credenciales.
+- Retorna un token de sesión (puede ser un string UUID) o marca al usuario como «logueado» en la sesión CLI.
+
+**Persistencia:**
+- Las credenciales y la sesión no persisten más allá del reinicio (a menos que implementes «recordarme», opcional).
